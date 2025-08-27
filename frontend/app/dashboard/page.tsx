@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,7 +5,6 @@ import Link from 'next/link';
 import { getUserRequests, API_URL } from '../../lib/api';
 import withAuth from '../components/auth/withAuth';
 
-// Definir el tipo para una solicitud
 interface Request {
     id: number;
     full_name: string;
@@ -30,9 +28,36 @@ const DashboardPage = () => {
                 setLoading(false);
             }
         };
-
         fetchRequests();
     }, []);
+
+    const handleDownload = async (requestId: number, fullName: string) => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_URL}/requests/${requestId}/download`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error('No se pudo descargar el archivo. Verifique su sesión.');
+            }
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Certificado-${fullName.replace(/ /g, '_')}-${requestId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+        } catch (err: any) {
+            setError(err.message);
+        }
+    };
 
     return (
         <div>
@@ -75,9 +100,9 @@ const DashboardPage = () => {
                                             <td>{new Date(req.created_at).toLocaleDateString()}</td>
                                             <td>
                                                 {req.status === 'Emitido' && (
-                                                    <a href={`${API_URL}/requests/${req.id}/download`} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
+                                                    <button onClick={() => handleDownload(req.id, req.full_name)} className="btn btn-sm btn-success">
                                                         Descargar PDF
-                                                    </a>
+                                                    </button>
                                                 )}
                                             </td>
                                         </tr>
