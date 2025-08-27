@@ -3,10 +3,10 @@ const { Pool } = require('pg');
 
 // TODO: Reemplazar con tus credenciales de PostgreSQL
 const pool = new Pool({
-    user: 'postgres', // Tu usuario de PostgreSQL
+    user: 'nozomi.proxy.rlwy.net',
     host: 'localhost',
-    database: 'docutrack', // El nombre de tu base de datos
-    password: 'tu_contraseña', // Tu contraseña de PostgreSQL
+    database: 'railway',
+    password: 'iMoANddwioanuFnLiGAzpZUsQCixGcJR',
     port: 5432,
 });
 
