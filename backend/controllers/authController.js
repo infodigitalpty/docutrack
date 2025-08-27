@@ -31,7 +31,7 @@ exports.register = async (req, res) => {
         // Generar JWT
         const token = jwt.sign(
             { id: newUser.rows[0].id, role_id: newUser.rows[0].role_id },
-            'tu_secreto_jwt', // TODO: Mover a una variable de entorno
+            process.env.JWT_SECRET, // TODO: Mover a una variable de entorno
             { expiresIn: '1h' }
         );
 
@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
         // Generar JWT
         const token = jwt.sign(
             { id: user.id, role_id: user.role_id },
-            'tu_secreto_jwt', // TODO: Mover a una variable de entorno
+            process.env.JWT_SECRET, // TODO: Mover a una variable de entorno
             { expiresIn: '1h' }
         );
 

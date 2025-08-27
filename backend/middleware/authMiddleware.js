@@ -12,7 +12,7 @@ exports.protect = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
 
             // Verificar token
-            const decoded = jwt.verify(token, 'tu_secreto_jwt'); // Usar el mismo secreto
+            const decoded = jwt.verify(token, process.env.JWT_SECRET); // Usar el mismo secreto
 
             // Obtener usuario del token y adjuntarlo a la request (sin la contraseña)
             req.user = await db.query('SELECT id, email, role_id FROM users WHERE id = $1', [decoded.id]);
