@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { loginUser } from '../lib/api';
 
 const LoginPage = () => {
@@ -64,6 +65,11 @@ const LoginPage = () => {
                                 {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                             </button>
                         </form>
+                        <div className="text-center mt-4">
+                            <Link href="/register" className="text-white-50">
+                                ¿No tienes una cuenta? <span className="fw-bold text-white">Regístrate</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
