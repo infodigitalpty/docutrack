@@ -72,6 +72,14 @@ const LoginPage = () => {
                         </div>
                     </div>
                 </div>
+
+                <div className="text-center mt-4">
+                    <div className="alert alert-light bg-transparent border-light text-white-50" role="alert">
+                        <a href="https://github.com/infodigitalpty/docutrack" className="alert-link text-white" target="_blank" rel="noopener noreferrer">
+                            Ver el código fuente de este proyecto en GitHub
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     );
