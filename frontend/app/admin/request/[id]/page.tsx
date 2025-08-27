@@ -1,16 +1,16 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getRequestById, updateRequestStatus, API_URL } from '../../../../lib/api';
+import { getRequestById, updateRequestStatus } from '../../../../lib/api';
 import withAdminAuth from '../../../components/auth/withAdminAuth';
 
+// Tipos de datos
 interface Document {
     id: number;
     original_name: string;
-    mime_type: string;
 }
-
 interface RequestDetails {
     id: number;
     full_name: string;
@@ -20,6 +20,7 @@ interface RequestDetails {
     documents: Document[];
 }
 
+// --- Componente de la Página ---
 const AdminRequestDetailPage = () => {
     const [request, setRequest] = useState<RequestDetails | null>(null);
     const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ const AdminRequestDetailPage = () => {
     const router = useRouter();
     const id = params.id as string;
 
+    // Efecto para cargar los datos de la solicitud
     useEffect(() => {
         if (id) {
             const fetchRequest = async () => {
@@ -42,66 +44,66 @@ const AdminRequestDetailPage = () => {
             };
             fetchRequest();
         }
-    }, [id]);
+    }, [id, router]); // Añadimos router a las dependencias
 
-    const handleStatusUpdate = async (newStatus: string) => { /* ... (código sin cambios) ... */ };
-
-    const handleDocumentDownload = async (docId: number, docName: string) => {
+    // Función para manejar la actualización de estado
+    const handleStatusUpdate = async (newStatus: string) => {
+        if (!id) return;
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_URL}/admin/documents/${docId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (!res.ok) {
-                throw new Error('No se pudo descargar el documento.');
-            }
-
-            const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = docName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-
+            await updateRequestStatus(id, newStatus);
+            alert(`Estado actualizado a: ${newStatus}`);
+            // Forzar la recarga de los datos de la página actual
+            router.refresh();
         } catch (err: any) {
-            setError(err.message);
+            alert(err.message || 'Error al actualizar el estado.');
         }
     };
 
-    if (loading) return <p>Cargando...</p>;
-    if (error) return <div className="alert alert-danger">{error}</div>;
-    if (!request) return <p>No se encontró la solicitud.</p>;
+    // Renderizado condicional para carga y errores
+    if (loading) return <div className="text-center"><p>Cargando detalles de la solicitud...</p></div>;
+    if (error) return <div className="alert alert-danger">Error: {error}</div>;
+    if (!request) return <div className="alert alert-warning">No se encontró la solicitud.</div>;
 
+    // --- JSX del Componente ---
     return (
         <div>
-            <h1>Detalle de la Solicitud #{request.id}</h1>
-            {error && <div className="alert alert-danger">{error}</div>}
-            <div className="card mb-4">
-                {/* ... (código sin cambios) ... */}
+            <h1 className="mb-4">Detalle de la Solicitud #{request.id}</h1>
+
+            {/* Tarjeta de Datos del Solicitante */}
+            <div className="card mb-4 shadow-sm">
+                <div className="card-header">Datos del Solicitante</div>
+                <div className="card-body">
+                    <p><strong>Nombre:</strong> {request.full_name}</p>
+                    <p><strong>Estado Actual:</strong> <span className={`badge bg-info`}>{request.status}</span></p>
+                    <p><strong>Detalles:</strong> {request.details}</p>
+                    <p><strong>Fecha de Solicitud:</strong> {new Date(request.created_at).toLocaleString()}</p>
+                </div>
             </div>
 
-            <div className="card mb-4">
+            {/* Tarjeta de Documentos Adjuntos (sin enlace) */}
+            <div className="card mb-4 shadow-sm">
                 <div className="card-header">Documentos Adjuntos</div>
                 <ul className="list-group list-group-flush">
                     {request.documents.map(doc => (
-                        <li key={doc.id} className="list-group-item d-flex justify-content-between align-items-center">
-                            {doc.original_name}
-                            <button onClick={() => handleDocumentDownload(doc.id, doc.original_name)} className="btn btn-sm btn-secondary">
-                                Descargar
-                            </button>
+                        <li key={doc.id} className="list-group-item">
+                            📄 {doc.original_name} (solo visible para el admin)
                         </li>
                     ))}
                 </ul>
             </div>
 
-            <div className="card">
-                 {/* ... (código sin cambios) ... */}
+            {/* Tarjeta de Acciones del Administrador (con botones rediseñados) */}
+            <div className="card shadow-sm">
+                <div className="card-header">Acciones del Administrador</div>
+                <div className="card-body">
+                    <p className="card-title">Cambiar estado de la solicitud:</p>
+                    <div className="d-grid gap-2 d-sm-flex justify-content-sm-start">
+                        <button onClick={() => handleStatusUpdate('En Validación')} className="btn btn-primary px-4">En Validación</button>
+                        <button onClick={() => handleStatusUpdate('Emitido')} className="btn btn-success px-4">Emitir Certificado</button>
+                        <button onClick={() => handleStatusUpdate('Rechazado')} className="btn btn-danger px-4">Rechazar</button>
+                        <button onClick={() => handleStatusUpdate('Requiere Corrección')} className="btn btn-warning px-4">Pedir Corrección</button>
+                    </div>
+                </div>
             </div>
         </div>
     );
