@@ -40,3 +40,46 @@ a {
     color-scheme: dark;
   }
 }
+
+/* --- ESTILOS AÑADIDOS --- */
+
+.login-page-container {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f2f5; /* Color de fondo de respaldo */
+  background: linear-gradient(to right top, #6d72c3, #3a478f, #2a357c, #1a236a, #0a1258);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 1rem; /* Bordes más redondeados */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Texto blanco para que contraste con el fondo oscuro */
+.glass-card .card-title,
+.glass-card .form-label {
+  color: white;
+}
+
+.glass-card .form-control {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+}
+
+.glass-card .form-control::placeholder {
+  color: #e0e0e0;
+}
+
+.glass-card .form-control:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: none;
+  color: white;
+}

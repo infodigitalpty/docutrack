@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -19,7 +18,6 @@ const LoginPage = () => {
 
         try {
             await loginUser({ email, password });
-            // Redireccionar al dashboard después del login
             router.push('/dashboard');
         } catch (err: any) {
             setError(err.message || 'Ocurrió un error inesperado.');
@@ -29,11 +27,11 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="row justify-content-center">
-            <div className="col-md-6">
-                <div className="card">
-                    <div className="card-body">
-                        <h1 className="card-title text-center">Iniciar Sesión</h1>
+        <div className="login-page-container">
+            <div className="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <div className="card glass-card">
+                    <div className="card-body p-4 p-sm-5">
+                        <h1 className="card-title text-center mb-4">DocuTrack</h1>
                         <form onSubmit={handleSubmit}>
                             {error && <div className="alert alert-danger">{error}</div>}
                             <div className="mb-3">
@@ -46,9 +44,10 @@ const LoginPage = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                     disabled={loading}
+                                    placeholder="tu@email.com"
                                 />
                             </div>
-                            <div className="mb-3">
+                            <div className="mb-4">
                                 <label htmlFor="password" className="form-label">Contraseña</label>
                                 <input
                                     type="password"
@@ -58,10 +57,11 @@ const LoginPage = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     disabled={loading}
+                                    placeholder="Tu contraseña"
                                 />
                             </div>
-                            <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                                {loading ? 'Iniciando sesión...' : 'Login'}
+                            <button type="submit" className="btn btn-primary w-100 py-2" disabled={loading}>
+                                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                             </button>
                         </form>
                     </div>
