@@ -45,25 +45,19 @@ exports.getRequestById = async (req, res) => {
 // Actualizar el estado de una solicitud
 exports.updateRequestStatus = async (req, res) => {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status } = req.body; // El frontend envía el estado final directamente, ej: "Rechazado"
 
-    // Validar el estado
-    const allowedStatus = ['Aprobar', 'Rechazar', 'Pedir Corrección', 'En Validación', 'Emitido'];
-    if (!allowedStatus.includes(status)) {
+    // Validar que el estado enviado sea uno de los permitidos en la base de datos
+    const allowedDbStatuses = ['En Validación', 'Emitido', 'Rechazado', 'Requiere Corrección'];
+    if (!allowedDbStatuses.includes(status)) {
+        // Si el estado no es válido, retorna un error.
         return res.status(400).json({ message: 'Estado no válido.' });
     }
-
-    // El estado "Aprobar" internamente cambia a "En Validación" o el admin puede ponerlo directo en "Emitido"
-    let finalStatus = status;
-    if(status === 'Aprobar') finalStatus = 'En Validación';
-    if(status === 'Rechazar') finalStatus = 'Rechazado';
-    if(status === 'Pedir Corrección') finalStatus = 'Requiere Corrección';
-
 
     try {
         const updatedRequest = await db.query(
             'UPDATE requests SET status = $1 WHERE id = $2 RETURNING *',
-            [finalStatus, id]
+            [status, id] // Se usa el estado validado directamente
         );
 
         if (updatedRequest.rows.length === 0) {
