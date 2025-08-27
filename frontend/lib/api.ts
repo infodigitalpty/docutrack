@@ -1,5 +1,5 @@
 
-const API_URL = 'http://localhost:5000/api';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 // Helper para obtener los headers de autenticación
 const getAuthHeaders = (isFormData = false) => {

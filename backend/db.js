@@ -1,13 +1,11 @@
-
 const { Pool } = require('pg');
 
-// TODO: Reemplazar con tus credenciales de PostgreSQL
+// Conexión a la base de datos usando variables de entorno
 const pool = new Pool({
-    user: 'nozomi.proxy.rlwy.net',
-    host: 'localhost',
-    database: 'railway',
-    password: 'iMoANddwioanuFnLiGAzpZUsQCixGcJR',
-    port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 module.exports = {

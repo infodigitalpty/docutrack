@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getUserRequests } from '../../lib/api';
+import { getUserRequests, API_URL } from '../../lib/api';
 import withAuth from '../components/auth/withAuth';
 
 // Definir el tipo para una solicitud
@@ -75,7 +75,7 @@ const DashboardPage = () => {
                                             <td>{new Date(req.created_at).toLocaleDateString()}</td>
                                             <td>
                                                 {req.status === 'Emitido' && (
-                                                    <a href={`http://localhost:5000/api/requests/${req.id}/download`} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
+                                                    <a href={`${API_URL}/requests/${req.id}/download`} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
                                                         Descargar PDF
                                                     </a>
                                                 )}
