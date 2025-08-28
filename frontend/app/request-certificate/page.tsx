@@ -79,7 +79,7 @@ const RequestCertificatePage = () => {
                             ></textarea>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="documents" className="form-label">Adjuntar Documentos (PDF, JPG)</label>
+                            <label htmlFor="documents" className="form-label">Adjuntar Documentos (PDF, JPG) Máx 50MB.</label>
                             <input
                                 type="file"
                                 className="form-control"
